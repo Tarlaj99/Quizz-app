@@ -1,111 +1,157 @@
 import { useEffect, useState, useRef } from 'react';
 
-console.log('1');
 
 export default function Tracker() {
-  const [names, setNames] = useState<string[]>([]);
-  const [pastNames, setPastNames] = useState<{name: string, points: number}[]>([]);
-
   const input = useRef<HTMLInputElement>(null);
+  const right_answer = useRef<HTMLHeadingElement>(null);
+
+  const [points, setPoints] = useState<number>(0);
+  const [Questions, setQuestions] = useState<Map>(new Map([
+    ["telefonia trzeciej generacji", "3G"],
+    ["przepustowość łącza", "bandwidth"],
+    ["kod kreskowy", "barcode"],
+    ["skaner biometryczny", "biometric scanner"],
+    ["łącze szerokopasmowe", "broadband"],
+    ["obliczać", "compute"],
+    ["soczewka kontaktowa", "contact lens"],
+    ["konwergencja / zbieżność", "convergence"],
+    ["konwertować", "convert"],
+    ["system cyberfizyczny", "cyber-physical system"],
+    ["przetwarzanie danych", "data processing"],
+    ["urządzenie", "device"],
+    ["technologia dystrybucji", "distribution technology"],
+    ["handel elektroniczny", "e-commerce"],
+    ["elektronika", "electronics"],
+    ["objąć", "encompass"],
+    ["podmiot", "entity"],
+    ["sprzęt komputerowy", "hardware"],
+    ["interfejs człowiek–maszyna", "human-machine interface"],
+    ["implementować", "implement"],
+    ["implementacja", "implementation"],
+    ["technologia informacyjno-komunikacyjna", "information and communication technology"],
+    ["specjalista IT", "IT specialist"],
+    ["dział IT", "IT department"],
+    ["przetwarzać / manipulować", "manipulate"],
+    ["udział w rynku", "market share"],
+    ["mikrosystemy", "microsystems"],
+    ["mnogość", "multiplicity"],
+    ["budowanie sieci kontaktów", "networking"],
+    ["przeniesienie biznesu za granicę", "off-shoring"],
+    ["platforma", "platform"],
+    ["przetwarzać", "process"],
+    ["chronić", "protect"],
+    ["identyfikacja za pomocą fal radiowych", "radio-frequency identification"],
+    ["odzyskiwać", "retrieve"],
+    ["półprzewodnik", "semiconductor"],
+    ["oprogramowanie", "software"],
+    ["model dostarczania oprogramowania", "Software as a Service"],
+    ["przechowywać", "store"],
+    ["nadzór", "surveillance"],
+    ["sprzęt telekomunikacyjny", "telecom equipment"],
+    ["sieć naziemna", "terrestrial network"],
+    ["przekazywać / transmitować", "transmit"],
+  ]));
+
+  let question: string = Array.from(Questions)[Math.floor(Math.random() * Questions.size)][0]
 
   const [darkMode, setDarkMode] = useState(new Date().getHours() > 18);
-
   const backgroundColor: object = {backgroundColor: darkMode? 'var(--dark-background)' : 'var(--light-background)'};
   const color: object = {color: `${darkMode? 'var(--dark-color)' : 'var(--light-color)'}`};
   const shadow: object = {textShadow: `0 1px 3px ${darkMode? 'var(--dark-text-shadow)' : 'var(--light-text-shadow)'}`, boxShadow: `${darkMode? 'var(--dark-box-shadow)' : 'var(--light-box-shadow)'}`};
-
   
   useEffect(() => {
     document.body.classList.toggle('dark', darkMode)
   }, [darkMode]);
 
   useEffect(() => {
-    input.current.addEventListener('animationend', () => {
-      input.current.classList.remove('error');
-    })
+    document.querySelector("h1.points")?.addEventListener('animationend', () => {
+      document.querySelector("h1.points")?.classList.remove('right')
+    });
   }, [])
 
   function ToggleDarkMode() {
     setDarkMode(!darkMode);
   }
 
-  function AddName(event): void{
+  function check(event){
     event.preventDefault();
 
-    const name = input.current.value;
+    const answer = event.target[0].value
+    let ans1 = undefined;
+    let ans2 = undefined;
+    const current_right_answer = Questions.get(question)
 
-    if (name && !(names.includes(name))){
-      setNames([...names, name]);
-      input.current.value = '';
-      return;
-    }
+    if(current_right_answer.search(',') != -1){
+      const both_answers = current_right_answer.trim().split(',');
+      ans1 = both_answers[0].trim();
+      ans2 = both_answers[1].trim();
+    } 
     else {
-      input.current.classList.add('error');
-
+      ans1 = current_right_answer.trim();
     }
-  }
+    if(ans1 == answer || ans2 == answer){
+      right_answer.current.classList.remove('wrong');
+      right_answer.current.textContent = '';
 
-  function Next(): void{
-    setNames((currentNames) => currentNames.slice(1));
+      document.querySelector("h1.points")?.classList.add('right');
+      
+      setPoints(points + 1); 
 
-    const name = names[0].trim();
-    
-    let index = pastNames.findIndex((person) => person.name == name)
-    
-    if(index != -1){
-      pastNames[index].points += 1
+      Questions.delete(question);
     }
-    else{
-      pastNames.push({ name: name, points: 1}) 
+
+    else {
+      right_answer.current.textContent = Questions.get(question);
+      right_answer.current.classList.add('wrong');
+
+      right_answer.current.addEventListener('animationend', () => {
+        right_answer.current.classList.remove('wrong');
+        right_answer.current.textContent = '';
+      }, {once: true})
+
+      setPoints(points - 1);
     }
 
     input.current.value = '';
-    return;
-  }
-   if(pastNames.length > 1){
-    pastNames.sort((a,b) => {
-      return b.points - a.points
-    });
-   }
-  return (
-    <div className='organise'>
-      <section>
-        <ul className='ranking' style={color}>
-        {
-          pastNames.map((person, index) =>(
-            <li key={index} style={shadow}>{person.name}: {person.points}</li>
-          ))
-        }
-        </ul>
-      </section>
-      <div className='main' style={{ height: `${620 + names.length * 30}px`, ...backgroundColor, ...shadow}}>
-        <h1 className='title' style={color}>
-          Queue Tracker
-        </h1>
-        
-        <div style={{position: 'absolute', top: '20px', right: '20px'}}>
-              <input type="checkbox" id="dark-mode-toggle" onChange={ToggleDarkMode} />
-              <label htmlFor="dark-mode-toggle" className="toggle"></label>
-        </div>
+  }  
 
-        <form action="" onSubmit={AddName}>
-          <input type="text" placeholder='Enter name...' ref={input} style={{ marginTop: names.length == 0 ? '7vh' : '', ...color, ...backgroundColor}}/>
-        </form>
-
-        <h1 id='FirstInQueue' style={{textShadow: `0 1px 3px ${darkMode? 'var(--dark-text-shadow)' : 'var(--light-text-shadow'}`}}>{names[0]}</h1>
-        {
-          names.length > 0 ? <button id='Next' onClick={Next}>Next</button> : null
-        } 
-
-        <ul style={color}>
-        {
-          names.map((name, index) => (
-            index == 0 ? null : <li key={index}>{name}</li>
-          ))
-        }
-        </ul>
+  if(Questions.size === 0){
+    return(
+      <div className='organise'>
+        <h1 className='win'>YOU WON !</h1>
+        <p>Your points: {points}</p>
       </div>
-      <section></section> {/*This one's just for the flex to have 3 elements sa that main is on center */}
-    </div>
-  )
+    )
+  }
+  else {
+    return (
+      <div className='organise'>
+        <section></section>
+        <div className='main' style={{ height: 620, ...backgroundColor, ...shadow}}>
+          <h1 className='title' style={{...color, fontSize: `${70 - question.length}px`}}>
+            {
+              question
+            }
+          </h1>
+          
+          <form action="" onSubmit={check}>
+            <input type="text" ref={input} style={{...color, ...backgroundColor}}/>
+          </form>
+
+          <div style={{position: 'absolute', top: '20px', right: '20px'}}>
+                <input type="checkbox" id="dark-mode-toggle" onChange={ToggleDarkMode} />
+                <label htmlFor="dark-mode-toggle" className="toggle"></label>
+          </div>
+          <h1 ref={right_answer} style={{fontSize: `${30}px`}}>
+            
+          </h1>
+
+          <h1 className='points' style={color}>
+            Points: {points} <br />
+          </h1>
+        </div>
+        <section></section>
+      </div>
+    )
+  }
 }
