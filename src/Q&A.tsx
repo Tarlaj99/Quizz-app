@@ -1,69 +1,44 @@
+// ä ü ö
 import { useEffect, useState, useRef } from 'react';
-
+import { Niemiecki } from './Data';
 
 export default function QnA({style, ListOfQuestions} : any) {
   const input = useRef<HTMLInputElement>(null);
   const right_answer = useRef<HTMLHeadingElement>(null);
 
   const [points, setPoints] = useState<number>(0);
-  const [Questions, setQuestions] = useState(new Map(
-    [
-  ['adapt', 'dostosować, przystosować'],
-  ['amend', 'poprawiać, zmieniać'],
-  ['applications programmer', 'programista aplikacji'],
-  ['Application Service Provider (ASP)', 'dostawca usług aplikacyjnych'],
-  ['arrange', 'organizować, układać'],
-  ['blog administrator', 'administrator bloga'],
-  ['carry out', 'wykonywać, przeprowadzać'],
-  ['clip art', 'gotowe elementy graficzne'],
-  ['compile', 'kompilować'],
-  ['computer salesperson', 'sprzedawca sprzętu komputerowego'],
-  ['computer security specialist', 'specjalista ds. bezpieczeństwa komputerowego'],
-  ['computer services engineering technician', 'technik serwisu komputerowego'],
-  ['Delphi', 'Delphi (język programowania)'],
-  ['design', 'projektować'],
-  ['develop', 'rozwijać, opracowywać'],
-  ['devise', 'wymyślać, opracowywać'],
-  ['desktop publishing (DTP)', 'publikowanie komputerowe'],
-  ['DTP operator', 'operator DTP'],
-  ['e-commerce developer', 'programista rozwiązań e-commerce'],
-  ['estimates', 'szacunki, kosztorysy'],
-  ['Exchange/Microsoft Exchange Server', 'serwer poczty Microsoft Exchange'],
-  ['handle', 'obsługiwać, zajmować się'],
-  ['hardware engineer/architect', 'inżynier sprzętu komputerowego'],
-  ['help desk/helpdesk technician', 'pracownik pomocy technicznej'],
-  ['identify', 'identyfikować, rozpoznawać'],
-  ['install', 'instalować'],
-  ['IT manager', 'kierownik działu IT'],
-  ['locate', 'lokalizować, znajdować'],
-  ['maintenance', 'konserwacja, utrzymanie'],
-  ['monitoring', 'monitorowanie, nadzór'],
-  ['network administrator/engineer/support person', 'administrator/inżynier sieci/pracownik wsparcia sieciowego'],
-  ['NT/Windows NT (New Technology)', 'system operacyjny Windows NT'],
-  ['offset lithography', 'druk offsetowy'],
-  ['Oracle', 'Oracle (system zarządzania bazami danych)'],
-  ['oversee', 'nadzorować'],
-  ['package', 'pakiet oprogramowania'],
-  ['page layout', 'układ strony'],
-  ['project management', 'zarządzanie projektami'],
-  ['relational database management system', 'system zarządzania relacyjną bazą danych'],
-  ['research', 'badania, prowadzić badania'],
-  ['software engineer/designer', 'inżynier/projektant oprogramowania'],
-  ['solid grasp', 'dobra znajomość, solidne zrozumienie'],
-  ['track record', 'dotychczasowe osiągnięcia, doświadczenie'],
-  ['specification', 'specyfikacja'],
-  ['Structured Query Language (SQL)', 'strukturalny język zapytań (SQL)'],
-  ['system analyst', 'analityk systemowy'],
-  ['system administrator/sysadmin', 'administrator systemów'],
-  ['system support person', 'pracownik wsparcia technicznego systemów'],
-  ['web developer/webmaster', 'programista stron internetowych/webmaster']
-]));
+  const [Questions, setQuestions] = useState(new Map(Niemiecki))
 
   let question: string = Array.from(Questions)[Math.floor(Math.random() * Questions.size)][0]
   useEffect(() => {
     document.querySelector("h1.points")?.addEventListener('animationend', () => {
       document.querySelector("h1.points")?.classList.remove('right')
     });
+
+    document.addEventListener('keydown', (e) => {
+      let key: string = '';
+      
+      if(e.key == '1'){
+        key = 'ä';
+      }
+      else if(e.key == '2'){
+        key = 'ü';
+      }
+      else if(e.key == '2'){
+        key = 'ö';
+      }
+      else if(e.key == '3'){
+        key = 'ß';
+      }
+
+      if(key){
+        input.current.value += key;
+        setTimeout(() => {
+          input.current.value = input.current.value.slice(0,-1);
+        }, 1)
+      }
+      
+      })
   }, [])
 
   function check(event){

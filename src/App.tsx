@@ -18,10 +18,14 @@ function App() {
     ['QnA', <QnA style={style} ListOfQuestions={{}} />]
   ])
 
+
+  
+
   function func(value: string){
     setChoice(choices.get(value));
-    
   }
+  
+
   const [choice, setChoice] = useState<ReactElement>(<MainMenu style={style} func={func}/>);
   useEffect(() => {
     document.body.classList.toggle('dark', darkMode)
@@ -31,23 +35,21 @@ function App() {
     setDarkMode(!darkMode);
   }
   return(
-    <>
-      <div className='organise' style={style}>
-        <section></section>
+    <div className='organise' style={style}>
+      <section></section>
 
-        <div className='main' style={{...style.backgroundColor}}>
-          {
-            choice
-          }
-          <div style={{position: 'absolute', top: '20px', right: '20px'}}>
-              <input type="checkbox" id="dark-mode-toggle" onChange={ToggleDarkMode} />
-              <label htmlFor="dark-mode-toggle" className="toggle"></label>
-          </div>
+      <div className='main' style={{...style.backgroundColor}}>
+        {
+          choice
+        }
+        <div style={{position: 'absolute', top: '20px', right: '20px'}}>
+            <input type="checkbox" id="dark-mode-toggle" onChange={ToggleDarkMode} />
+            <label htmlFor="dark-mode-toggle" className="toggle"></label>
         </div>
-        
-        <section></section>
       </div>
-    </>
+      
+      <section></section>
+    </div>
   )
 }
 

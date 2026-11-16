@@ -230,7 +230,7 @@ li {
     color: rgb(9, 243, 9);
   }
   50%{
-    font-size: 50px;
+    transform: scale(1.2);
   }
   100%{
     color: rgb(9, 243, 9);

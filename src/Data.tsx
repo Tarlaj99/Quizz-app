@@ -1,4 +1,4 @@
-export const Niemiecki: string[][] = [
+export const Niemiecki: string[][] = [ 
     ["poddasze", "das Dachgeschoss"],
     ["zasięg", "der Empfang"],
     ["domek ogrodowy", "das Gartenhaus"],
@@ -48,6 +48,6 @@ export const Niemiecki: string[][] = [
     ["(po)między (przyimek)", "zwischen"],
     ["przemeblowywać pokój", "das Zimmer umräumen"],
     ["zmieniać wszystko", "alles ändern"],
-    ["Wszystko wygląda jak nowe.", "Alles sieht neu aus."],
+    ["Wszystko wygląda jak nowe.", "Alles sieht neu aus"],
     ["meblować pokój", "das Zimmer möblieren"]
   ];
